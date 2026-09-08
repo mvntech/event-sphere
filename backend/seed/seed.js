@@ -17,6 +17,11 @@ const MessageThread = require(path.join(BE, 'src/models/MessageThread'));
 const Notification = require(path.join(BE, 'src/models/Notification'));
 const AnalyticsEvent = require(path.join(BE, 'src/models/AnalyticsEvent'));
 
+const fixedExpoId = (key) =>
+  new mongoose.Types.ObjectId(
+    require('node:crypto').createHash('sha1').update(`eventsphere:seed:expo:${key}`).digest('hex').slice(0, 24)
+  );
+
 const MARK = 'SEED::';
 const PASSWORD = 'Passw0rd!2026';
 const DOMAIN = 'eventsphere.test';
@@ -219,7 +224,14 @@ const pick = (list, i) => list[i % list.length];
 // clean
 
 async function clean() {
-  const expos = await Expo.find({ description: { $regex: `^${MARK}` } }).select('_id').lean();
+    const expos = await Expo.find({
+    $or: [
+      { _id: { $in: EXPOS.map((e) => fixedExpoId(e.key)) } },
+      { description: { $regex: `^${LEGACY_MARK}` } },
+    ],
+  })
+    .select('_id')
+    .lean();
   const expoIds = expos.map((e) => e._id);
   const users = await User.find({ email: { $regex: `@${DOMAIN}$` } }).select('_id').lean();
   const userIds = users.map((u) => u._id);
@@ -261,9 +273,10 @@ async function seed() {
   for (const row of EXPOS) {
     const start = new Date(now + row.startsIn * DAY);
     expos[row.key] = await Expo.create({
+      _id: fixedExpoId(row.key),
       organizerRef: organizer._id,
       title: row.title,
-      description: `${MARK}${row.description}`,
+      description: row.description,
       theme: row.theme,
       location: row.location,
       startDate: start,
@@ -288,6 +301,7 @@ async function seed() {
         expoRef: expos[company.expo]._id,
         companyName: company.name,
         category: company.category,
+        logoUrl: `/demo/${slug(company.name)}.svg`,
         description: company.blurb,
         approvalStatus: company.status,
         reviewNote: company.status === 'rejected' ? 'Consumer range — try the spring consumer fair instead.' : undefined,
@@ -336,7 +350,7 @@ async function seed() {
         capacity: s.capacity,
         startTime: s.startTime,
         endTime: s.endTime,
-        description: `${MARK}demo fixture`,
+        description: '',
       }))
     );
   }
