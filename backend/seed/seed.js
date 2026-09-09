@@ -22,7 +22,7 @@ const fixedExpoId = (key) =>
     require('node:crypto').createHash('sha1').update(`eventsphere:seed:expo:${key}`).digest('hex').slice(0, 24)
   );
 
-const MARK = 'SEED::';
+const LEGACY_MARK = 'SEED::';
 const PASSWORD = 'Passw0rd!2026';
 const DOMAIN = 'eventsphere.test';
 
