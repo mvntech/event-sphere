@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1a1a"/><stop offset="1" stop-color="#dedede"/>
+    </linearGradient>
+    <radialGradient id="v" cx="0.3" cy="0.15" r="0.9">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/><stop offset="1" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.55">
+    <path d="M-40 620 C 220 520 380 640 620 560 S 1020 470 1240 540"/>
+    <path d="M-40 560 C 220 455 400 585 640 495 S 1030 405 1240 475"/>
+    <path d="M-40 498 C 240 392 420 528 660 430 S 1040 340 1240 410"/>
+    <path d="M-40 434 C 250 330 440 468 680 366 S 1050 276 1240 344"/>
+    <path d="M-40 368 C 260 268 460 404 700 300 S 1060 212 1240 278"/>
+    <path d="M-40 300 C 270 204 480 338 720 234 S 1070 148 1240 212"/>
+    <path d="M-40 232 C 280 140 500 272 740 168 S 1080 84 1240 146"/>
+  </g>
+  <g fill="#000000" opacity="0.5">
+    <path d="M-40 620 C 220 520 380 640 620 560 S 1020 470 1240 540 L1240 820 L-40 820Z"/>
+  </g>
+  <rect width="1200" height="800" fill="url(#v)"/>
+</svg>

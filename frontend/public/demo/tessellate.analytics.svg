@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tessellate Analytics">
+  <rect width="64" height="64" rx="10" fill="#f4f1ea"/>
+  <g fill="#c2410c">
+    <rect x="14" y="14" width="16" height="16"/><rect x="34" y="34" width="16" height="16"/>
+  </g>
+  <g fill="none" stroke="#1c1917" stroke-width="3">
+    <rect x="34.5" y="14.5" width="15" height="15"/><rect x="14.5" y="34.5" width="15" height="15"/>
+  </g>
+</svg>
