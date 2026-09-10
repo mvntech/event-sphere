@@ -1,0 +1,14 @@
+{
+  "name": "EventSphere",
+  "short_name": "EventSphere",
+  "description": "Expo and trade-show management for organizers, exhibitors and attendees.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f5fc",
+  "theme_color": "#f4f5fc",
+  "icons": [
+    { "src": "/icon-blue-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/icon-blue-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" }
+  ]
+}
