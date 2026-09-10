@@ -6,6 +6,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const { ok, created } = require('../utils/apiResponse');
 const { assertCapacityFitsExisting } = require('../services/registrationService');
 const { PUBLIC_STATUSES } = require('./expoController');
+const { emitToExpo } = require('../services/socketService');
 
 /** loads the expo behind a session and checks the caller organizes it. */
 async function loadOwnedExpo(expoId, user) {
@@ -30,6 +31,17 @@ function assertWithinExpo(expo, startTime, endTime) {
       [{ field: 'startTime', message: 'Outside the expo dates' }]
     );
   }
+}
+
+/** broadcasts a schedule change to everyone viewing this expo. */
+function broadcastSchedule(expoId, session, action) {
+  emitToExpo(expoId, 'schedule:updated', {
+    sessionId: String(session._id ?? session.id),
+    expoId: String(expoId),
+    session: typeof session.toJSON === 'function' ? session.toJSON() : session,
+    action,
+    at: new Date().toISOString(),
+  });
 }
 
 // GET /api/sessions/expo/:expoId
@@ -75,6 +87,8 @@ const createSession = asyncHandler(async (req, res) => {
   assertWithinExpo(expo, details.startTime, details.endTime);
 
   const session = await Session.create({ ...details, expoRef: expo._id });
+
+  broadcastSchedule(expo._id, session, 'created');
   return created(res, { session: session.toJSON() }, 'Session added to the schedule');
 });
 
@@ -100,6 +114,7 @@ const updateSession = asyncHandler(async (req, res) => {
   Object.assign(session, req.body);
   await session.save();
 
+  broadcastSchedule(expo._id, session, 'updated');
   return ok(res, { session: session.toJSON() }, 'Session updated');
 });
 
@@ -107,12 +122,14 @@ const updateSession = asyncHandler(async (req, res) => {
 const deleteSession = asyncHandler(async (req, res) => {
   const session = await Session.findById(req.params.id);
   if (!session) throw ApiError.notFound('Session not found');
-  await loadOwnedExpo(session.expoRef, req.user);
+  const expo = await loadOwnedExpo(session.expoRef, req.user);
 
   // registrations for a deleted session would dangle, so they go too.
   await Registration.deleteMany({ sessionRef: session._id });
+  const removed = session.toJSON();
   await session.deleteOne();
 
+  broadcastSchedule(expo._id, removed, 'deleted');
   return ok(res, { id: String(session._id) }, 'Session removed from the schedule');
 });
 
