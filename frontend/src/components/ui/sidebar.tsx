@@ -194,9 +194,6 @@ function Sidebar({
           }
           side={side}
         >
-          {/* Accessible name for the mobile drawer. Our sheet.tsx exposes no
-              SheetHeader (it is re-skinned to the locked tokens and was not
-              overwritten on install, §4b); this grouping div is equivalent. */}
           <div className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>

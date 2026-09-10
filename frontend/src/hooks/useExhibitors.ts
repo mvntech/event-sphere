@@ -117,7 +117,7 @@ export function useUpdateExhibitorProfile() {
   });
 }
 
-/** Organizer decision on an application (CLAUDE.md §7). */
+/** Organizer decision on an application. */
 export function useReviewExhibitor() {
   const queryClient = useQueryClient();
   return useMutation({

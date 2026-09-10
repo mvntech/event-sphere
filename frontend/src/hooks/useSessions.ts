@@ -1,5 +1,7 @@
+import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/lib/api';
+import { useExpoRoom } from '@/hooks/useSocket';
 import type { Session } from '@/types';
 
 export interface SessionInput {
@@ -29,6 +31,27 @@ export function useSessions(expoId: string | undefined) {
     queryFn: () => http.get<ScheduleResponse>(`/sessions/expo/${expoId}`),
     enabled: Boolean(expoId),
   });
+}
+
+export interface ScheduleUpdatedEvent {
+  sessionId: string;
+  expoId: string;
+  session: Session;
+  action: 'created' | 'updated' | 'deleted';
+  at: string;
+}
+
+/**
+ * Keeps an open schedule in step with the organizer editing it.
+ */
+export function useLiveSchedule(expoId: string | undefined) {
+  const queryClient = useQueryClient();
+
+  const handler = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: sessionKeys.byExpo(expoId ?? '') });
+  }, [queryClient, expoId]);
+
+  return useExpoRoom<ScheduleUpdatedEvent>(expoId, 'schedule:updated', handler);
 }
 
 export function useCreateSession(expoId: string) {

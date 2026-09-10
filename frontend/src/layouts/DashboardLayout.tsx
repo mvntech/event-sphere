@@ -118,7 +118,7 @@ function Rail({ role }: { role: Role }) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-      </SidebarContent>s
+      </SidebarContent>
     </Sidebar>
   );
 }
