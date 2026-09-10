@@ -104,7 +104,7 @@ router.get('/me/deletion-check', controller.deletionCheck);
  */
 router.delete('/me', controller.deleteMe);
 
-/** User and role management — organizer only (CLAUDE.md §2). */
+/** User and role management — organizer only. */
 const idParam = validateParams(z.object({ id: objectId }));
 
 /**
